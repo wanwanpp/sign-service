@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8"/>
+    <title>补签审核</title>
+    <script src="//cdn.bootcss.com/angular.js/1.5.5/angular.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+</head>
+<body ng-controller="buqianCtrl">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <ul class="nav nav-pills col-lg-12" role="tablist">
+        <p class="navbar-text col-lg-5">Welcome: <span id="span1" sec:authentication="name"></span></p>
+        <li role="presentation"><a href="/buqian/showReviewPage" sec:authorize="hasAnyAuthority('SUPER_ADMIN')">补签审核</a></li>
+        <li role="presentation"><a href="/excelout" sec:authorize="hasAnyAuthority('SUPER_ADMIN')">签到信息导出</a></li>
+        <li role="presentation"><a href="/sign" sec:authorize="hasAnyAuthority('SIGN')">签到页</a></li>
+        <li role="presentation"><a href="/setpwd">修改密码</a></li>
+        <li role="presentation"><a th:href="@{/logout}">退出</a></li>
+    </ul>
+</nav>
+
+<div style="height: 60px"></div>
+<div style="height: 10px"></div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>姓名</th>
+        <th>补签时长</th>
+        <th>原因</th>
+        <th>申请时间</th>
+        <th colspan="2" class="text-center">审核</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="buqian in buqians">
+        <td>{{$index+1}}</td>
+        <td>{{buqian.name}}</td>
+        <td>{{buqian.date}}</td>
+        <td>{{buqian.reason}}</td>
+        <td>{{buqian.createTime |date:'yyyy/MM/dd HH时mm分'}}</td>
+        <td><button class="btn btn-primary" ng-click="setBuqianSuccessful(buqian.id)">通过</button></td>
+        <td><button class="btn btn-danger" ng-click="setBuqianFailed(buqian.id)">不通过</button></td>
+    </tr>
+    </tbody>
+</table>
+
+<script type="application/javascript">
+    var app = angular.module('myApp', []);
+    app.controller('buqianCtrl', function ($scope, $http) {
+
+        $scope.getbuqians = function () {
+            $http({
+                method: 'get',
+                url: '/buqian/review'
+            }).success(function (buqians) {
+                $scope.buqians = buqians;
+            });
+        };
+        $scope.getbuqians();
+
+        $scope.setBuqianSuccessful=function (id) {
+            $http({
+                method: 'get',
+                url: '/buqian/setBuqianSuccessful',
+                params:{id:id}
+            }).success(function () {
+                $scope.getbuqians();
+            });
+        };
+
+        $scope.setBuqianFailed=function (id) {
+            $http({
+                method: 'get',
+                url: '/buqian/setBuqianFailed',
+                params:{id:id}
+            }).success(function () {
+                $scope.getbuqians();
+            });
+        }
+
+
+    });
+
+</script>
+</body>
+</html>
