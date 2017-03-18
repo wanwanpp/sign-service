@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp">
+<html lang="en" ng-app="myApp" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>签到导出页</title>
@@ -7,25 +8,42 @@
     <script src="//cdn.bootcss.com/angular.js/1.5.5/angular.js"></script>
     <script src="//cdn.bootcss.com/angular.js/1.5.5/angular-animate.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="/js/excelout.js"></script>
+    <script th:src="@{/js/excelout.js}"></script>
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
     <script src="//cdn.bootcss.com/angular-ui-bootstrap/1.3.3/ui-bootstrap-tpls.min.js"></script>
     <script type="application/javascript">
-        $(document).ready(function() {
-            $("#excel").click(function(){
-                $("#formid").attr("action","/excelout/excel");
+        $(document).ready(function () {
+
+            function getContextPath() {
+                return window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+            }
+
+            var contextPath = getContextPath();
+
+            $("#excel").click(function () {
+                $("#formid").attr("action", contextPath+"/excelout/excel");
                 $("#formid").submit();
             });
-            $("#excelDetail").click(function(){
-                        $("#formid").attr("action","/excelout/excelDetail");
-                        $("#formid").submit();
+            $("#excelDetail").click(function () {
+                $("#formid").attr("action", contextPath+"/excelout/excelDetail");
+                $("#formid").submit();
             });
         });
     </script>
 </head>
 <body ng-controller="orderCtrl">
-<div style="height: 40px"></div>
-<div class="col-lg-offset-2 col-lg-9 ">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <ul class="nav nav-pills col-lg-12" role="tablist">
+        <p class="navbar-text col-lg-5">Welcome: <span id="span1" sec:authentication="name"></span></p>
+        <li role="presentation"><a th:href="@{/buqian/showReviewPage}" sec:authorize="hasAnyAuthority('SUPER_ADMIN')">补签审核</a></li>
+        <li role="presentation"><a th:href="@{/excelout}" sec:authorize="hasAnyAuthority('SUPER_ADMIN')">签到信息导出</a></li>
+        <li role="presentation"><a th:href="@{/sign}" sec:authorize="hasAnyAuthority('SIGN')">签到页</a></li>
+        <li role="presentation"><a th:href="@{/setpwd}">修改密码</a></li>
+        <li role="presentation"><a th:href="@{/logout}">退出</a></li>
+    </ul>
+</nav>
+<div style="height: 70px" class="col-md-12"></div>
+<div class="col-lg-offset-2 col-lg-12">
     <form class="form-inline" id="formid">
         <div class="form-group" style="width: 150px">
             <input type="text" name="name" id="operatorname" class="form-control" placeholder="姓名"

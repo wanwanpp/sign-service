@@ -8,13 +8,15 @@
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
 </head>
 <body ng-controller="buqianCtrl">
+
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <ul class="nav nav-pills col-lg-12" role="tablist">
         <p class="navbar-text col-lg-5">Welcome: <span id="span1" sec:authentication="name"></span></p>
-        <li role="presentation"><a href="/buqian/showReviewPage" sec:authorize="hasAnyAuthority('SUPER_ADMIN')">补签审核</a></li>
-        <li role="presentation"><a href="/excelout" sec:authorize="hasAnyAuthority('SUPER_ADMIN')">签到信息导出</a></li>
-        <li role="presentation"><a href="/sign" sec:authorize="hasAnyAuthority('SIGN')">签到页</a></li>
-        <li role="presentation"><a href="/setpwd">修改密码</a></li>
+        <li role="presentation"><a th:href="@{/buqian/showReviewPage}" sec:authorize="hasAnyAuthority('SUPER_ADMIN')">补签审核</a>
+        </li>
+        <li role="presentation"><a th:href="@{/excelout}" sec:authorize="hasAnyAuthority('SUPER_ADMIN')">签到信息导出</a></li>
+        <li role="presentation"><a th:href="@{/sign}" sec:authorize="hasAnyAuthority('SIGN')">签到页</a></li>
+        <li role="presentation"><a th:href="@{/setpwd}">修改密码</a></li>
         <li role="presentation"><a th:href="@{/logout}">退出</a></li>
     </ul>
 </nav>
@@ -39,8 +41,12 @@
         <td>{{buqian.date}}</td>
         <td>{{buqian.reason}}</td>
         <td>{{buqian.createTime |date:'yyyy/MM/dd HH时mm分'}}</td>
-        <td><button class="btn btn-primary" ng-click="setBuqianSuccessful(buqian.id)">通过</button></td>
-        <td><button class="btn btn-danger" ng-click="setBuqianFailed(buqian.id)">不通过</button></td>
+        <td>
+            <button class="btn btn-primary" ng-click="setBuqianSuccessful(buqian.id)">通过</button>
+        </td>
+        <td>
+            <button class="btn btn-danger" ng-click="setBuqianFailed(buqian.id)">不通过</button>
+        </td>
     </tr>
     </tbody>
 </table>
@@ -49,31 +55,37 @@
     var app = angular.module('myApp', []);
     app.controller('buqianCtrl', function ($scope, $http) {
 
+        function getContextPath() {
+            return window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+        }
+
+        var contextPath = getContextPath();
+
         $scope.getbuqians = function () {
             $http({
                 method: 'get',
-                url: '/buqian/review'
+                url: contextPath + '/buqian/review'
             }).success(function (buqians) {
                 $scope.buqians = buqians;
             });
         };
         $scope.getbuqians();
 
-        $scope.setBuqianSuccessful=function (id) {
+        $scope.setBuqianSuccessful = function (id) {
             $http({
                 method: 'get',
-                url: '/buqian/setBuqianSuccessful',
-                params:{id:id}
+                url: contextPath + '/buqian/setBuqianSuccessful',
+                params: {id: id}
             }).success(function () {
                 $scope.getbuqians();
             });
         };
 
-        $scope.setBuqianFailed=function (id) {
+        $scope.setBuqianFailed = function (id) {
             $http({
                 method: 'get',
-                url: '/buqian/setBuqianFailed',
-                params:{id:id}
+                url: contextPath + '/buqian/setBuqianFailed',
+                params: {id: id}
             }).success(function () {
                 $scope.getbuqians();
             });

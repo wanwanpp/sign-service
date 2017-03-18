@@ -1,0 +1,7 @@
+1.js获取上下文名
+ function getContextPath() {
+        return window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+    }
+
+
+2.js中使用js获取上下文名再加上访问路径，在页面中尽可能的使用替换th:href,th:src等标签，这些标签自动加上了上下文名。格式为@{/css/bootstrap.css}

@@ -1,12 +1,18 @@
 var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
 app.controller('signDetailCtrl', function ($scope, $http) {
 
+    function getContextPath() {
+        return window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+    }
+
+    var contextPath = getContextPath();
+
     $scope.getData = function () {
         var starts = $("#firstTime").val();
         var ends = $("#lastTime").val();
         $http({
             method: 'post',
-            url: '/signDetail/getData',
+            url: contextPath + '/signDetail/getData',
             data: {starts: starts, ends: ends}
         }).success(function (signs) {
             $scope.signs = signs;
@@ -17,14 +23,19 @@ app.controller('signDetailCtrl', function ($scope, $http) {
 
         var date = $("#dateselect").val();
         var reason = $("#reason").val();
-        $http({
-            method: 'get',
-            url: '/buqian/apply',
-            params: {number: date, reason: reason}
-        }).success(function (message) {
-            document.getElementById("buqian").setAttribute("disabled", "disabled");
-            alert(message);
-        });
+        if (reason.length == 0) {
+            alert("请填写补签原因");
+        } else {
+            $http({
+                method: 'get',
+                url: contextPath + '/buqian/apply',
+                params: {number: date, reason: reason}
+            }).success(function (message) {
+                document.getElementById("buqian").setAttribute("disabled", "disabled");
+                alert(message);
+            });
+        }
+
     };
 //日期插件
     $scope.today = function () {
