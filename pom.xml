@@ -18,6 +18,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <warPackageName>SignService</warPackageName>
+        <tomcat.deploy.server>localTestServer</tomcat.deploy.server>
+        <tomcat.deploy.serverUrl>http://localhost:8080/manager/text</tomcat.deploy.serverUrl>
         <!--&lt;!&ndash; 覆盖thymeleaf版本依赖 &ndash;&gt;-->
         <!--<thymeleaf.version>3.0.2.RELEASE</thymeleaf.version>-->
         <!--<thymeleaf-layout-dialect.version>2.0.5</thymeleaf-layout-dialect.version>-->
@@ -39,11 +42,17 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
 
+        <!--移掉内嵌服务器-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -60,6 +69,8 @@
             <artifactId>jxl</artifactId>
             <version>2.6.12</version>
         </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -81,15 +92,49 @@
             <version>1.16.10</version>
         </dependency>
 
+        <!--reids客户端-->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+
+        <!--redis pool需要-->
+        <!--<dependency>-->
+            <!--<groupId>commons-pool</groupId>-->
+            <!--<artifactId>commons-pool</artifactId>-->
+            <!--<version>1.5.4</version>-->
+        <!--</dependency>-->
+
+
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>deploy2production</id>
+            <properties>
+                <tomcat.deploy.server>productionServer</tomcat.deploy.server>
+                <tomcat.deploy.serverUrl>http://123.207.249.95:8080/manager/text</tomcat.deploy.serverUrl>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
-        <finalName>SignService</finalName>
-        <!--<plugins>-->
-        <!--<plugin>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-        <!--</plugin>-->
-        <!--</plugins>-->
+        <finalName>${warPackageName}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <server>${tomcat.deploy.server}</server>
+                    <url>${tomcat.deploy.serverUrl}</url>
+                    <path>/${warPackageName}</path>
+                    <!--<username>root</username>-->
+                    <!--<password>980325</password>-->
+                    <!--<update>true</update>-->
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
