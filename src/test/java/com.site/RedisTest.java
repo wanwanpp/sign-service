@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import redis.clients.jedis.Jedis;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -144,4 +145,64 @@ public class RedisTest {
         System.out.println(jedis.get("newname"));
     }
 
+    @Test
+    public void testObject() throws IOException, ClassNotFoundException {
+
+        Jedis redis = RedisUtil.getJedis();
+        String set = redis.set("mingyuan", "1");
+        System.out.println(" set result \t" + set);
+        redis.incr("mingyuan");
+        System.out.println(" set result \t" + redis.get("mingyuan"));
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
+
+        Person person = new Person("wanwanpp", 19);
+        oos.writeObject(person);
+
+        byte[] byteArray = bos.toByteArray();
+        oos.close();
+        bos.close();
+
+        redis.set("wanwanpp".getBytes(), byteArray);
+
+        byte[] bytes = redis.get("wanwanpp".getBytes());
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        ObjectInputStream inputStream = new ObjectInputStream(byteArrayInputStream);
+        Person readObject = (Person) inputStream.readObject();
+        System.out.println(readObject.toString());
+        inputStream.close();
+        byteArrayInputStream.close();
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
