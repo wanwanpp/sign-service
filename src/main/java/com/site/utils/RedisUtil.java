@@ -7,6 +7,7 @@ import redis.clients.jedis.JedisPoolConfig;
 public final class RedisUtil {
 
     //Redis服务器IP
+    // TODO: 2018/1/25 0025 使用spring的配置，application.properties
     private static String ADDR = "123.207.249.95";
 
     //Redis的端口号
