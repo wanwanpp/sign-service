@@ -2,6 +2,7 @@ package com.site.utils;
 
 /**
  * Created by wang0 on 2016/9/13.
+ * 时间计算工具类
  */
 public class DateUtil {
 
@@ -57,8 +58,6 @@ public class DateUtil {
                     string.append(seconds).append("秒");
                 }
             }
-
-
         } else {
             long minutes = tominute(mill);
             if (minutes > 0) {
@@ -77,6 +76,4 @@ public class DateUtil {
         }
         return string;
     }
-
-
 }

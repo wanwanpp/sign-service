@@ -6,22 +6,24 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
-@EnableWebMvcSecurity
+@EnableWebSecurity      //开启spring security服务
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
-    UserDetailsService customUserService() { //2
+    UserDetailsService customUserService() {
         return new MemberService();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        MemberService实现了UserDetailsService接口，spring security调用这个
+//        接口定义的loadUserByUsername方法进行用户验证
         auth.userDetailsService(customUserService());
     }
 
@@ -30,11 +32,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .headers().frameOptions().sameOrigin()
                 .and().authorizeRequests()
-                .antMatchers("/*.html").permitAll()
+                .antMatchers("/*.html").permitAll()    //匹配模式
 //                .antMatchers("/excelout/**").hasAnyRole("SUPER_ADMIN")
                 .anyRequest().authenticated()
-                .and().formLogin().loginPage("/").defaultSuccessUrl("/signDetail", true)
-                .failureUrl("/").permitAll()
+                .and().formLogin().loginPage("/").defaultSuccessUrl("/signDetail", true).failureUrl("/").permitAll()
 //                已超时的seesion重定向页面
                 .and().sessionManagement().invalidSessionUrl("/")
 //        退出登录时删除session对应的cookie

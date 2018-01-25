@@ -31,24 +31,25 @@ public class Member implements UserDetails { //1
     private String loginName;
     private String pwd;
     @Column(name = "groups")
-
     private Integer group;
     private Integer isleader;
     private Integer isstart;
     private Long recordId;
     private Integer sex;
     private String phone;
+
     @ManyToMany(mappedBy = "members")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonIgnore
-    private List<Roles> roles = new ArrayList<Roles>();
+    @JsonIgnore   //禁止此字段序列化
+    private List<Role> roles = new ArrayList<>();
 
-
+//    获取所有的权限
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+//        SimpleGrantedAuthority继承自GrantedAuthority
         List<SimpleGrantedAuthority> auths = new ArrayList<SimpleGrantedAuthority>();
-        List<Roles> roles= this.getRoles();
-        for(Roles role:roles){
+        List<Role> roles = this.getRoles();
+        for (Role role : roles) {
             auths.add(new SimpleGrantedAuthority(role.getMark()));
         }
         return auths;
@@ -68,18 +69,19 @@ public class Member implements UserDetails { //1
     public boolean isAccountNonExpired() {
         return true;
     }
+
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @Override
     public boolean isEnabled() {
         return true;
     }
-
-
 }

@@ -13,10 +13,10 @@ public class Global {
 
     public static boolean contain(int hours) {
         for (int i : array) {
-            if (i == hours) return true;
-
+            if (i == hours) {
+                return true;
+            }
         }
         return false;
     }
-
 }

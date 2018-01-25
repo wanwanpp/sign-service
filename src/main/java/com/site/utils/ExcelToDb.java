@@ -29,7 +29,7 @@ public class ExcelToDb {
 
     public void exceltodb() throws IOException, BiffException {
         List<Member> members = new LinkedList<>();
-        Workbook rwb = null;
+        Workbook rwb;
 
         InputStream inputStream = new FileInputStream(new File("E:/桌面文档资料/Desktop/成员信息总汇.xls"));
 
@@ -60,7 +60,9 @@ public class ExcelToDb {
                 member.setGroup(1);
             }else if (cellGroup.equals("web后端")){
                 member.setGroup(4);
-            }else member.setGroup(0);
+            }else {
+                member.setGroup(0);
+            }
             member.setStuId(Long.valueOf(cellNumber));
             member.setPhone(cellPhone);
             member.setGrade(Integer.valueOf(cellGrade.substring(2,4)));

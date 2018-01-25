@@ -36,6 +36,5 @@ public class SignRecords {
         this.name = name;
         this.comeTime = new Timestamp(System.currentTimeMillis());
     }
-
     public SignRecords(){}
 }

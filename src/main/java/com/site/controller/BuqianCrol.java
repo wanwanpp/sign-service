@@ -4,9 +4,9 @@ import com.site.model.sign.Buqian;
 import com.site.model.sign.SignRecords;
 import com.site.repository.BuqianRepo;
 import com.site.repository.SignRecordsRepo;
+import com.site.utils.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,41 +29,37 @@ public class BuqianCrol {
     @Autowired
     private SignRecordsRepo signRecordsRepo;
 
-    public String getCurrentUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
-
     @RequestMapping(value = "/apply", produces = "application/text")
     @ResponseBody
-    public String apply(@RequestParam(required = false) String reason,@RequestParam Integer number) throws IOException {
+    public String apply(@RequestParam(required = false) String reason, @RequestParam Integer number) throws IOException {
 
-        String name = getCurrentUsername();
-        Buqian buqian = new Buqian(name, number + "小时",reason);
+        String name = SecurityUtil.getCurrentUsername();
+        Buqian buqian = new Buqian(name, number + "小时", reason);
 
-        if (buqianRepo.save(buqian)!=null){
+        if (buqianRepo.save(buqian) != null) {
             return "申请成功";
-        }else {
+        } else {
             return "申请失败";
         }
     }
 
-    @RequestMapping("/showReviewPage")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
-    public String showReviewPage(){
+    @RequestMapping("/showReviewPage")
+    public String showReviewPage() {
         return "reviewBuqian";
     }
 
-    @RequestMapping("/review")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
+    @RequestMapping("/review")
     @ResponseBody
-    public List<Buqian> review(){
+    public List<Buqian> review() {
         List<Buqian> buqians = buqianRepo.findByStatusEq0();
         return buqians;
     }
 
     @RequestMapping("/setBuqianSuccessful")
     @ResponseBody
-    public void setBuqianSuccessful(@RequestParam Long id){
+    public void setBuqianSuccessful(@RequestParam Long id) {
         Buqian buqian = buqianRepo.findOne(id);
         buqianRepo.setBuqianSuccessful(buqian.getId());
 
@@ -71,15 +67,14 @@ public class BuqianCrol {
         signRecords.setName(buqian.getName());
         signRecords.setComeTime(buqian.getCreateTime());
         signRecords.setLeaveTime(buqian.getCreateTime());
-        signRecords.setTotalMill(Long.valueOf(Integer.valueOf(buqian.getDate().substring(0,1))*3600*1000));
+        signRecords.setTotalMill(Long.valueOf(Integer.valueOf(buqian.getDate().substring(0, 1)) * 3600 * 1000));
         signRecords.setStrTime(buqian.getDate());
-
         signRecordsRepo.save(signRecords);
     }
 
     @RequestMapping("/setBuqianFailed")
     @ResponseBody
-    public void setBuqianFailed(@RequestParam Long id){
+    public void setBuqianFailed(@RequestParam Long id) {
         buqianRepo.setBuqianFailed(id);
     }
 }

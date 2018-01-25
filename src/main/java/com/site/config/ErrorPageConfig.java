@@ -19,11 +19,15 @@ public class ErrorPageConfig {
         return new MyCustomizer();
     }
 
+    //配置内嵌的servlet容器
     private static class MyCustomizer implements EmbeddedServletContainerCustomizer {
 
         @Override
         public void customize(ConfigurableEmbeddedServletContainer container) {
             container.addErrorPages(new ErrorPage(HttpStatus.FORBIDDEN, "/403"));
+//            设置contextpath
+            //            container.setContextPath("/signService");
+            //            container.setSsl(new Ssl());
         }
     }
 }

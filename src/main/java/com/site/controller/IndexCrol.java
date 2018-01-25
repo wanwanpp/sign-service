@@ -1,13 +1,12 @@
 package com.site.controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Created by 王萍 on 2017/3/15 0015.
  */
 
-@Controller
+//@Controller
 public class IndexCrol {
 
     @RequestMapping("/")

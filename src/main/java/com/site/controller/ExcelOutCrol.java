@@ -67,8 +67,8 @@ public class ExcelOutCrol {
         long start = new SimpleDateFormat("yyyy-MM-dd").parse(starts).getTime();
         long end = new SimpleDateFormat("yyyy-MM-dd").parse(ends).getTime();
 
-        log.info(name);
-        log.info(starts);
+        log.debug(name);
+        log.debug(starts);
         log.debug(ends);
         log.debug(String.valueOf(grade));
         List<RecordsDto> dtos = new ArrayList<RecordsDto>();

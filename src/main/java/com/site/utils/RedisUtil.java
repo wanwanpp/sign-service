@@ -47,8 +47,6 @@ public final class RedisUtil {
 
     /**
      * 获取Jedis实例
-     *
-     * @return
      */
     public synchronized static Jedis getJedis() {
         try {
@@ -63,11 +61,8 @@ public final class RedisUtil {
             return null;
         }
     }
-
     /**
      * 释放jedis资源
-     *
-     * @param jedis
      */
     public static void returnResource(final Jedis jedis) {
         if (jedis != null) {
