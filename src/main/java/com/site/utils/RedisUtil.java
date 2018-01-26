@@ -30,9 +30,7 @@ public final class RedisUtil {
 
     private static JedisPool jedisPool = null;
 
-    /**
-     * 初始化Redis连接池
-     */
+    //初始化Redis连接池
     static {
         try {
             JedisPoolConfig config = new JedisPoolConfig();
@@ -62,6 +60,7 @@ public final class RedisUtil {
             return null;
         }
     }
+
     /**
      * 释放jedis资源
      */
