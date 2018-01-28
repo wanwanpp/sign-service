@@ -39,16 +39,6 @@ public interface MemberRepo extends JpaRepository<Member, Long> {
 
     @Modifying
     @Transactional
-    @Query("update Member m set m.isstart=1 where m.name=?1")
-    int setIsStart(String name);
-
-    @Modifying
-    @Transactional
-    @Query("update Member m set m.isstart=0 where m.name=?1")
-    int setIsEnd(String name);
-
-    @Modifying
-    @Transactional
     @Query("update Member m set m.pwd=?1 where m.name=?2")
     int setPwd(String pwd, String name);
 
