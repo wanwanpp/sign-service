@@ -13,11 +13,6 @@ import java.util.List;
  */
 public interface MemberRepo extends JpaRepository<Member, Long> {
 
-    @Query("select m from Member m where m.stuId =?1")
-    Member findByStuId(Long id);
-
-    List<Member> findByGrade(int grade);
-
     @Query("select m.name from Member m where m.grade =?1")
     List<String> findNameByGrade(int grade);
 
